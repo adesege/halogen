@@ -1,4 +1,5 @@
 var React = require('react');
+var PropTypes = require('prop-types');
 var assign = require('domkit/appendVendorPrefix');
 var insertKeyframesRule = require('domkit/insertKeyframesRule');
 
@@ -6,15 +7,15 @@ var insertKeyframesRule = require('domkit/insertKeyframesRule');
  * @type {Object}
  */
 var keyframes = {
-    '0%': {
-        transform: 'scaley(1.0)'
-    },
-    '50%': {
-        transform: 'scaley(0.4)'
-    },
-    '100%': {
-        transform: 'scaley(1.0)'
-    }
+  '0%': {
+    transform: 'scaley(1.0)'
+  },
+  '50%': {
+    transform: 'scaley(0.4)'
+  },
+  '100%': {
+    transform: 'scaley(1.0)'
+  }
 };
 
 /**
@@ -22,98 +23,99 @@ var keyframes = {
  */
 var animationName = insertKeyframesRule(keyframes);
 
-var Loader = React.createClass({
-    /**
+/**
      * @type {Object}
      */
-    propTypes: {
-        loading: React.PropTypes.bool,
-        color: React.PropTypes.string,
-        height: React.PropTypes.string,
-        width: React.PropTypes.string,
-        margin: React.PropTypes.string,
-        radius: React.PropTypes.string
-    },
+var propTypes = {
+  loading: PropTypes.bool,
+  color: PropTypes.string,
+  height: PropTypes.string,
+  width: PropTypes.string,
+  margin: PropTypes.string,
+  radius: PropTypes.string
+};
 
-    /**
+/**
      * @return {Object}
      */
-    getDefaultProps: function() {
-        return {
-            loading: true,
-            color: '#ffffff',
-            height: '35px',
-            width: '4px',
-            margin: '2px',
-            radius: '2px'
-        };
-    },
+var defaultProps = {
+  loading: true,
+  color: '#ffffff',
+  height: '35px',
+  width: '4px',
+  margin: '2px',
+  radius: '2px'
+};
 
-    /**
+class Loader extends React.Component {
+  /**
      * @return {Object}
      */
-    getLineStyle: function() {
-        return {
-            backgroundColor: this.props.color,
-            height: this.props.height,
-            width: this.props.width,
-            margin: this.props.margin,
-            borderRadius: this.props.radius,
-            verticalAlign: this.props.verticalAlign
-        };
-    },
+  getLineStyle() {
+    return {
+      backgroundColor: this.props.color,
+      height: this.props.height,
+      width: this.props.width,
+      margin: this.props.margin,
+      borderRadius: this.props.radius,
+      verticalAlign: this.props.verticalAlign
+    };
+  }
 
-    /**
+  /**
      * @param  {Number} i
      * @return {Object}
      */
-    getAnimationStyle: function(i) {
-        var animation = [animationName, '1s', (i * 0.1) + 's', 'infinite', 'cubic-bezier(.2,.68,.18,1.08)'].join(' ');
-        var animationFillMode = 'both';
+  getAnimationStyle(i) {
+    var animation = [animationName, '1s', `${i * 0.1}s`, 'infinite', 'cubic-bezier(.2,.68,.18,1.08)'].join(' ');
+    var animationFillMode = 'both';
 
-        return {
-            animation: animation,
-            animationFillMode: animationFillMode
-        };
-    },
+    return {
+      animation: animation,
+      animationFillMode: animationFillMode
+    };
+  }
 
-    /**
+  /**
      * @param  {Number} i
      * @return {Object}
      */
-    getStyle: function(i) {
-        return assign(
-            this.getLineStyle(i),
-            this.getAnimationStyle(i),
-            {
-                display: 'inline-block'
-            }
-        );
-    },
+  getStyle(i) {
+    return assign(
+      this.getLineStyle(i),
+      this.getAnimationStyle(i),
+      {
+        display: 'inline-block'
+      }
+    );
+  }
 
-    /**
+  /**
      * @param  {Boolean} loading
      * @return {ReactComponent || null}
      */
-    renderLoader: function(loading) {
-        if (loading) {
-            return (
-                <div id={this.props.id} className={this.props.className}>
-                    <div style={this.getStyle(1)}></div>
-                    <div style={this.getStyle(2)}></div>
-                    <div style={this.getStyle(3)}></div>
-                    <div style={this.getStyle(4)}></div>
-                    <div style={this.getStyle(5)}></div>
-                </div>
-            );
-        }
-
-        return null;
-    },
-
-    render: function() {
-        return this.renderLoader(this.props.loading);
+  renderLoader(loading) {
+    if (loading) {
+      return (
+        <div id={this.props.id} className={this.props.className}>
+          <div style={this.getStyle(1)} />
+          <div style={this.getStyle(2)} />
+          <div style={this.getStyle(3)} />
+          <div style={this.getStyle(4)} />
+          <div style={this.getStyle(5)} />
+        </div>
+      );
     }
-});
+
+    return null;
+  }
+
+  render() {
+    return this.renderLoader(this.props.loading);
+  }
+}
+
+Loader.propTypes = propTypes;
+Loader.defaultProps = defaultProps;
 
 module.exports = Loader;
